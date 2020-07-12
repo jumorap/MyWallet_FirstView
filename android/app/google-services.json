@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "125970532260",
+    "firebase_url": "https://sumiser-alpha.firebaseio.com",
+    "project_id": "sumiser-alpha",
+    "storage_bucket": "sumiser-alpha.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:125970532260:android:53aff9a48d83afad636331",
+        "android_client_info": {
+          "package_name": "com.emulateios"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "125970532260-k6c8gpbo3m4b446pp2ce2l2nleudolh5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5dnYq0ayzHcKVFtVnGS-rT5-6Wd4BdGY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "125970532260-k6c8gpbo3m4b446pp2ce2l2nleudolh5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

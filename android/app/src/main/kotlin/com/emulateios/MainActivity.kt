@@ -1,0 +1,6 @@
+package com.emulateios
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}
