@@ -27,6 +27,7 @@ dependencies:
   font_awesome_flutter: ^8.8.1
   #Next line help us to build graphics. Has to be imported in the class like: import 'package:charts_flutter/flutter.dart';
   charts_flutter: ^0.6.0
+  cloud_firestore: ^0.13.7
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -38,6 +39,7 @@ dev_dependencies:
     sdk: flutter
   firebase_core: ^0.4.5
   firebase_analytics: ^5.0.16
+  firebase_core_web: ^0.1.1+2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

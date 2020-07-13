@@ -1,6 +1,10 @@
+import 'package:emulateios/month_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:charts_flutter/flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'greph_widget.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,10 +37,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   PageController _controller;
   int currentPage = 9;
+  Stream<QuerySnapshot> _query;
 
   @override
   void initState() {
     super.initState();
+
+    _query = Firestore.instance
+        .collection('expenses')
+        .where("month", isEqualTo: currentPage + 1)
+        .snapshots();
+
     _controller = PageController(
       initialPage: currentPage,
       viewportFraction: 0.4,
@@ -90,9 +101,18 @@ class _MyHomePageState extends State<MyHomePage> {
         //Define the "objects-widgets that appear in body"
         children: <Widget>[
           _selector(),
-          _expenses(),
-          _graph(),
-          _list(),
+          StreamBuilder<QuerySnapshot>(
+            stream: _query,
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> data){
+              if (data.hasData) {
+                return MonthWidget();
+              }
+              return Center(//We present a bar load. Circular
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
+          MonthWidget(),
         ]
       ),
     );
@@ -153,82 +173,5 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _expenses() {
-    return Column(
-      children: <Widget>[
-        Text("\$777,41", //Next lines give style to Text
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30.0
-          )
-        ),
-        Text("Total expenses", //Next lines give style to Text
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16.0,
-            color: Colors.blueGrey
-          )
-        )
-      ]
-    );
-  }
 
-  Widget _graph() {
-    return Container(
-      height: 250.5,
-      //child: GraphWidget(),
-    ); // Container
-  }
-
-  Widget _item(IconData icon, String name, int percent, double value){
-    return ListTile(
-      leading: Icon(icon, size: 32.0),
-      title: Text(name,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20.0,
-        ),
-      ),
-      subtitle: Text("$percent% of expenses",
-        style: TextStyle(
-          fontSize: 16.0,
-          color: Colors.blueGrey,
-        ),
-      ),
-      trailing: Container(
-        //Realice a container-decoration to write the value
-        decoration: BoxDecoration(
-          color: Colors.blueAccent.withOpacity(0.3),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-          child: Padding(//This is a PADDING, is so util to give a nice apparence
-            padding: const EdgeInsets.all(8.0),
-            child: Text("\$$value",
-              style: TextStyle(
-                color: Colors.blueAccent,
-                fontWeight: FontWeight.bold,
-                fontSize: 15.0,
-              ),
-            ),
-          ),
-      ),
-    );
-  }
-  Widget _list() {
-    //IMPORTANT!! Whith this line, we can do this widget SCROLLING
-    return Expanded(
-      child: ListView(
-        children: <Widget>[
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-          _item(Icons.local_drink, "Alcohol", 5, 15.0),
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-        ],
-      ),
-    );
-  }
 }
