@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'greph_widget.dart';
 
 class MonthWidget extends StatefulWidget {
+  final List<DocumentSnapshot> documents;
+
+  const MonthWidget({Key key, this.documents}) : super(key: key);
   @override
   _MonthWidgetState createState() => _MonthWidgetState();
 }

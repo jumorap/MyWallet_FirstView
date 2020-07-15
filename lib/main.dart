@@ -105,7 +105,9 @@ class _MyHomePageState extends State<MyHomePage> {
             stream: _query,
             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> data){
               if (data.hasData) {
-                return MonthWidget();
+                return MonthWidget(
+                    documents: data.data.documents,
+                );
               }
               return Center(//We present a bar load. Circular
                 child: CircularProgressIndicator(),
@@ -152,6 +154,10 @@ class _MyHomePageState extends State<MyHomePage> {
         onPageChanged: (newPage) {
           setState(() {
             currentPage = newPage;
+            _query = Firestore.instance
+                .collection('expenses')
+                .where("month", isEqualTo: currentPage + 1)
+                .snapshots();
           });
         },
         controller: _controller,
