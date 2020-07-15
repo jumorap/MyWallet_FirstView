@@ -1,13 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'greph_widget.dart';
 
 class MonthWidget extends StatefulWidget {
   final List<DocumentSnapshot> documents;
+  final double total;
+  final List<double> perDay;
+  final Map<String, double> categories;
 
-  const MonthWidget({Key key, this.documents}) : super(key: key);
+  MonthWidget({Key key, this.documents}) : 
+      total = documents.map((doc) => doc['value'])
+          .fold(0.0, (a, b) => a + b),
+      perDay = List.generate(30, (int index){
+        return documents.where((doc) => doc['day'] == (index + 1))
+            .map((doc) => doc['value'])
+            .fold(0.0, (a, b) => a + b);
+      }),
+  categories = documents.fold({}, (Map<String, double> map, document) {
+    if (!map.containsKey(document['category'])) {
+      map[document['category']] = 0.0;
+    }
+    map[document['category']] += document['value'];
+    return map;
+  }),
+
+        super(key: key);
+  
   @override
   _MonthWidgetState createState() => _MonthWidgetState();
 }
@@ -22,6 +41,7 @@ class _MonthWidgetState extends State<MonthWidget> {
         _graph(),
         Container(
           color: Colors.blueAccent.withOpacity(0.15),
+          height: 10.0,
         ),
         _list(),
         ],
@@ -31,42 +51,44 @@ class _MonthWidgetState extends State<MonthWidget> {
   Widget _expenses() {
     return Column(
         children: <Widget>[
-          Text("\$777,41", //Next lines give style to Text
+          Text("\$${widget.total.toStringAsFixed(2)}", //Next lines give style to Text
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30.0
               )
           ),
           Text("Total expenses", //Next lines give style to Text
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                  color: Colors.blueGrey
-              )
-          )
-        ]
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+                color: Colors.blueGrey
+            ),
+          ),
+        ],
     );
   }
 
   Widget _graph() {
     return Container(
-      height: 250.5,
-      child: GraphWidget(),
+      height: 180.5,
+      child: GraphWidget(
+          data: widget.perDay,
+      ),
     ); // Container
   }
 
   Widget _item(IconData icon, String name, int percent, double value){
     return ListTile(
-      leading: Icon(icon, size: 32.0),
+      leading: Icon(icon, size: 26.0),
       title: Text(name,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 20.0,
+          fontSize: 18.0,
         ),
       ),
       subtitle: Text("$percent% of expenses",
         style: TextStyle(
-          fontSize: 16.0,
+          fontSize: 14.0,
           color: Colors.blueGrey,
         ),
       ),
@@ -92,17 +114,19 @@ class _MonthWidgetState extends State<MonthWidget> {
   Widget _list() {
     //IMPORTANT!! Whith this line, we can do this widget SCROLLING
     return Expanded(
-      child: ListView(
-        children: <Widget>[
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-          _item(Icons.local_drink, "Alcohol", 5, 15.0),
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-          _item(FontAwesomeIcons.shoppingCart, "Shopping", 14, 145.12),
-        ],
+      child: ListView.separated(
+        itemCount: widget.categories.keys.length,
+        itemBuilder: (BuildContext contect, int index) {
+          var key = widget.categories.keys.elementAt(index);
+          var data = widget.categories[key];
+          return _item(FontAwesomeIcons.shoppingCart, key, 100 * data ~/ widget.total , data);
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return Container(
+            color: Colors.blueAccent.withOpacity(0.15),
+            height: 8.0,
+          );
+        },
       ),
     );
   }

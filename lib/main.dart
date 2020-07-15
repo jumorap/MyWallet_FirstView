@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:charts_flutter/flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'greph_widget.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -114,7 +114,6 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             },
           ),
-          MonthWidget(),
         ]
       ),
     );
