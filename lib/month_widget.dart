@@ -51,7 +51,7 @@ class _MonthWidgetState extends State<MonthWidget> {
   Widget _expenses() {
     return Column(
         children: <Widget>[
-          Text("\$${widget.total.toStringAsFixed(2)}", //Next lines give style to Text
+          Text("\$${widget.total.toStringAsFixed(0)}", //Next lines give style to Text
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30.0
@@ -77,7 +77,7 @@ class _MonthWidgetState extends State<MonthWidget> {
     ); // Container
   }
 
-  Widget _item(IconData icon, String name, int percent, double value){
+  Widget _item(IconData icon, String name, int percent, int value){
     return ListTile(
       leading: Icon(icon, size: 26.0),
       title: Text(name,
@@ -98,7 +98,7 @@ class _MonthWidgetState extends State<MonthWidget> {
           color: Colors.blueAccent.withOpacity(0.3),
           borderRadius: BorderRadius.circular(5.0),
         ),
-        child: Padding(//This is a PADDING, is so util to give a nice apparence
+        child: Padding(//This is a PADDING, is so util to give a nice appearance
           padding: const EdgeInsets.all(8.0),
           child: Text("\$$value",
             style: TextStyle(
@@ -119,7 +119,7 @@ class _MonthWidgetState extends State<MonthWidget> {
         itemBuilder: (BuildContext contect, int index) {
           var key = widget.categories.keys.elementAt(index);
           var data = widget.categories[key];
-          return _item(FontAwesomeIcons.shoppingCart, key, 100 * data ~/ widget.total , data);
+          return _item(FontAwesomeIcons.shoppingCart, key, 100 * data ~/ widget.total , data ~/ 1);
         },
         separatorBuilder: (BuildContext context, int index) {
           return Container(

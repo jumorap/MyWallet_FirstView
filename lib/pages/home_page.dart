@@ -1,7 +1,6 @@
 import 'package:emulateios/month_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:charts_flutter/flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -15,7 +14,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   PageController _controller;
-  int currentPage = 9;
+  int currentPage = DateTime.now().month - 1;
   Stream<QuerySnapshot> _query;
 
   @override
@@ -64,13 +63,12 @@ class _MyHomePageState extends State<MyHomePage> {
       //This is button blue that is in center of dock
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        //Next lines build one action to do that open a new page-layout in app. Is like a setOnClickListener in Java
+          child: Icon(Icons.add),
+        //Next lines build one action to open a new page-layout in app. Is like a setOnClickListener in Java
         onPressed: (){
           Navigator.of(context).pushNamed('/add');
         },
       ),
-
       //Here we begin to build the body of app
       body: _body(),
     );
