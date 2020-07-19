@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart';
 
@@ -51,12 +49,12 @@ class _GraphWidgetState extends State<GraphWidget> {
         domainFn: (value, index) => index,
         measureFn: (value, _) => value,
         data: widget.data,
-        strokeWidthPxFn: (_, __) => 4,
+        strokeWidthPxFn: (_, __) => 3,
       )
     ];
 
     return LineChart(series,
-      animate: false,
+      animate: true,
       selectionModels: [
         SelectionModelConfig(
           type: SelectionModelType.info,
@@ -67,18 +65,19 @@ class _GraphWidgetState extends State<GraphWidget> {
           tickProviderSpec: StaticNumericTickProviderSpec(
               [
                 TickSpec(0, label: '01'),
-                TickSpec(4, label: '05'),
-                TickSpec(9, label: '10'),
-                TickSpec(14, label: '15'),
-                TickSpec(19, label: '20'),
-                TickSpec(24, label: '25'),
-                TickSpec(29, label: '30'),
+                TickSpec(5, label: '06'),
+                TickSpec(10, label: '11'),
+                TickSpec(15, label: '16'),
+                TickSpec(20, label: '21'),
+                TickSpec(25, label: '26'),
+                TickSpec(30, label: '31'),
               ]
           )
       ),
       primaryMeasureAxis: NumericAxisSpec(
         tickProviderSpec: BasicNumericTickProviderSpec(
-          desiredTickCount: 4,
+          //Define the number of boxes in axis Y (eje Y)
+          desiredTickCount: 6,
         ),
       ),
     );

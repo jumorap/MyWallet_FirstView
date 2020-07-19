@@ -1,10 +1,6 @@
-import 'package:emulateios/month_widget.dart';
 import 'package:emulateios/pages/add_page.dart';
 import 'package:emulateios/pages/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:charts_flutter/flutter.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 

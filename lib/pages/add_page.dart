@@ -10,7 +10,7 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  String category;
+  String category = "";
   int value = 0;
 
   @override
@@ -20,7 +20,7 @@ class _AddPageState extends State<AddPage> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0.0,//We dont wanna that see the appBar
-        title: Text("Category",
+        title: Text("Categorías (7)",
           style: TextStyle(
             color: Colors.grey,
           )
@@ -58,10 +58,13 @@ class _AddPageState extends State<AddPage> {
       child: CategorySelectorWidget(//Send the categories to category_selector_widget to build images and text in top of activity
         //Send the name and image in a data structure Map
         categories: {
-          "Shopping": Icons.shopping_cart,
-          "Alcohol": FontAwesomeIcons.beer,
-          "Fast food": FontAwesomeIcons.hamburger,
-          "Bill": FontAwesomeIcons.wallet,
+          "Compras": Icons.shopping_cart,
+          "Diversión": FontAwesomeIcons.beer,
+          "Alimentos": FontAwesomeIcons.hamburger,
+          "Recibos": FontAwesomeIcons.wallet,
+          "Tarjetas": FontAwesomeIcons.creditCard,
+          "Impuestos": FontAwesomeIcons.listAlt,
+          "Imprevisto": FontAwesomeIcons.frown,
         },
         onValueChanged: (newCategory) => category = newCategory,
       ),
@@ -89,8 +92,8 @@ class _AddPageState extends State<AddPage> {
       behavior: HitTestBehavior.opaque,
         onTap: () {
           setState(() {
-            if (text == "00") {
-              value = value * 100;
+            if (text == "000") {
+              value = value * 1000;
             } else {
               value = value * 10 + int.parse(text);
             }
@@ -138,7 +141,7 @@ class _AddPageState extends State<AddPage> {
                 _num("9", height),
               ]),
               TableRow(children: [
-                _num("00", height),
+                _num("000", height),
                 _num("0", height),
                 GestureDetector(
                   //To detect the white parts in buttons, we write te next line
@@ -171,7 +174,7 @@ class _AddPageState extends State<AddPage> {
       return Hero(//Here continued the animation from home page > FloatingActionButton
         tag: "add_button",
         child: Container(
-          height: 50.0,
+          height: 65.0,
           width: double.infinity,
           decoration: BoxDecoration(color: Colors.blueAccent),
           child: MaterialButton(
@@ -197,7 +200,7 @@ class _AddPageState extends State<AddPage> {
               } else {
                 //When the condition is false, here present an message in screen. That is button
                 Scaffold.of(context).showSnackBar(
-                    SnackBar(content: Text("Asigna un valor a tu gasto")));
+                    SnackBar(content: Text("Asigna un valor válido y una categoría a tu gasto")));
               }
             },
           ),

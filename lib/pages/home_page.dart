@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ]
           )
       ),
-      //This is button blue that is in center of dock
+      //This is blue button that is in center of dock
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),

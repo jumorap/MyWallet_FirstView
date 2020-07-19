@@ -12,7 +12,7 @@ class MonthWidget extends StatefulWidget {
   MonthWidget({Key key, this.documents}) : 
       total = documents.map((doc) => doc['value'])
           .fold(0.0, (a, b) => a + b),
-      perDay = List.generate(30, (int index){
+      perDay = List.generate(31, (int index){
         return documents.where((doc) => doc['day'] == (index + 1))
             .map((doc) => doc['value'])
             .fold(0.0, (a, b) => a + b);
@@ -51,13 +51,13 @@ class _MonthWidgetState extends State<MonthWidget> {
   Widget _expenses() {
     return Column(
         children: <Widget>[
-          Text("\$${widget.total.toStringAsFixed(0)}", //Next lines give style to Text
+          Text("\$${widget.total.toStringAsFixed(0)} COP", //Next lines give style to Text
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30.0
               )
           ),
-          Text("Total expenses", //Next lines give style to Text
+          Text("Gastos totales", //Next lines give style to Text
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16.0,
@@ -69,10 +69,13 @@ class _MonthWidgetState extends State<MonthWidget> {
   }
 
   Widget _graph() {
-    return Container(
-      height: 180.5,
-      child: GraphWidget(
-          data: widget.perDay,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Container(
+        height: 180.5,
+        child: GraphWidget(
+            data: widget.perDay,
+        ),
       ),
     ); // Container
   }
@@ -86,7 +89,7 @@ class _MonthWidgetState extends State<MonthWidget> {
           fontSize: 18.0,
         ),
       ),
-      subtitle: Text("$percent% of expenses",
+      subtitle: Text("$percent% de gastos",
         style: TextStyle(
           fontSize: 14.0,
           color: Colors.blueGrey,
@@ -116,7 +119,7 @@ class _MonthWidgetState extends State<MonthWidget> {
     return Expanded(
       child: ListView.separated(
         itemCount: widget.categories.keys.length,
-        itemBuilder: (BuildContext contect, int index) {
+        itemBuilder: (BuildContext context, int index) {
           var key = widget.categories.keys.elementAt(index);
           var data = widget.categories[key];
           return _item(FontAwesomeIcons.shoppingCart, key, 100 * data ~/ widget.total , data ~/ 1);
@@ -124,7 +127,7 @@ class _MonthWidgetState extends State<MonthWidget> {
         separatorBuilder: (BuildContext context, int index) {
           return Container(
             color: Colors.blueAccent.withOpacity(0.15),
-            height: 8.0,
+            height: 4.0,
           );
         },
       ),
