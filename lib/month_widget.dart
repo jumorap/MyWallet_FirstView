@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'greph_widget.dart';
+import 'package:intl/intl.dart';
 
 class MonthWidget extends StatefulWidget {
   final List<DocumentSnapshot> documents;
@@ -49,9 +50,12 @@ class _MonthWidgetState extends State<MonthWidget> {
     );
   }
   Widget _expenses() {
+    //Imported 'package:intl/intl.dart', we can give format to [widget.total], doing friendly how this look to our users
+    // is used wrote the next line, and after taking the variable [widget.total] so: f.format([variable])
+    NumberFormat f = new NumberFormat("#,###", "es_COP");
     return Column(
         children: <Widget>[
-          Text("\$${widget.total.toStringAsFixed(0)} COP", //Next lines give style to Text
+          Text("\$${f.format(widget.total)} COP", //Next lines give style to Text
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30.0
@@ -80,7 +84,8 @@ class _MonthWidgetState extends State<MonthWidget> {
     ); // Container
   }
 
-  Widget _item(IconData icon, String name, int percent, int value){
+  Widget _item(IconData icon, String name, double percent, int value){
+    NumberFormat f = new NumberFormat("#,###", "es_COP");
     return ListTile(
       leading: Icon(icon, size: 26.0),
       title: Text(name,
@@ -89,7 +94,7 @@ class _MonthWidgetState extends State<MonthWidget> {
           fontSize: 18.0,
         ),
       ),
-      subtitle: Text("$percent% de gastos",
+      subtitle: Text("${percent.toStringAsFixed(2)}% de gastos",
         style: TextStyle(
           fontSize: 14.0,
           color: Colors.blueGrey,
@@ -103,7 +108,7 @@ class _MonthWidgetState extends State<MonthWidget> {
         ),
         child: Padding(//This is a PADDING, is so util to give a nice appearance
           padding: const EdgeInsets.all(8.0),
-          child: Text("\$$value",
+          child: Text("\$${f.format(value)}",
             style: TextStyle(
               color: Colors.blueAccent,
               fontWeight: FontWeight.bold,
@@ -122,7 +127,7 @@ class _MonthWidgetState extends State<MonthWidget> {
         itemBuilder: (BuildContext context, int index) {
           var key = widget.categories.keys.elementAt(index);
           var data = widget.categories[key];
-          return _item(FontAwesomeIcons.shoppingCart, key, 100 * data ~/ widget.total , data ~/ 1);
+          return _item(FontAwesomeIcons.shoppingCart, key, 100 * data / widget.total , data ~/ 1);
         },
         separatorBuilder: (BuildContext context, int index) {
           return Container(

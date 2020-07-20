@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 _bottomAction(FontAwesomeIcons.history),
                 _bottomAction(FontAwesomeIcons.chartPie),
                 //The dock size is defined by
-                SizedBox(width: 25.0, height: 45.0),
+                SizedBox(width: 25.0, height: 50.0),
                 _bottomAction(FontAwesomeIcons.wallet),
                 _bottomAction(Icons.settings),
               ]
@@ -126,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
         )
     );
   }
-  Widget _selector(){//Create an horizonal "menu-deslizable*"
+  Widget _selector(){//Create an horizontal "menu-deslizable*"
     return SizedBox.fromSize(
         size: Size.fromHeight(70.0),
         child: PageView(

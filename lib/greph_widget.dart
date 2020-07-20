@@ -77,7 +77,7 @@ class _GraphWidgetState extends State<GraphWidget> {
       primaryMeasureAxis: NumericAxisSpec(
         tickProviderSpec: BasicNumericTickProviderSpec(
           //Define the number of boxes in axis Y (eje Y)
-          desiredTickCount: 6,
+          desiredTickCount: 7,
         ),
       ),
     );

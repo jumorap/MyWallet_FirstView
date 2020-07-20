@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../category_selection_widget.dart';
 import 'package:flutter/src/widgets/heroes.dart';
+import 'package:intl/intl.dart';
 
 class AddPage extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class _AddPageState extends State<AddPage> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0.0,//We dont wanna that see the appBar
-        title: Text("Categorías (7)",
+        title: Text("Categorías (10)",
           style: TextStyle(
             color: Colors.grey,
           )
@@ -55,14 +56,17 @@ class _AddPageState extends State<AddPage> {
   Widget _categorySelector() {
     return Container(
       height: 70.0,
-      child: CategorySelectorWidget(//Send the categories to category_selector_widget to build images and text in top of activity
+      child: CategorySelectorWidget(//Send the categories to class category_selector_widget.dart to build images and text in top of activity
         //Send the name and image in a data structure Map
         categories: {
           "Compras": Icons.shopping_cart,
           "Diversión": FontAwesomeIcons.beer,
           "Alimentos": FontAwesomeIcons.hamburger,
-          "Recibos": FontAwesomeIcons.wallet,
+          "Servicios": FontAwesomeIcons.wallet,
           "Tarjetas": FontAwesomeIcons.creditCard,
+          "Salud": FontAwesomeIcons.heartbeat,
+          "Transporte": FontAwesomeIcons.busAlt,
+          "Educación": FontAwesomeIcons.university,
           "Impuestos": FontAwesomeIcons.listAlt,
           "Imprevisto": FontAwesomeIcons.frown,
         },
@@ -72,10 +76,11 @@ class _AddPageState extends State<AddPage> {
   }
 
   Widget _currentValue() {
+    NumberFormat f = new NumberFormat("#,###", "es_COP");
     var realValue = value / 1.0;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text("\$${realValue.toStringAsFixed(0)}",
+      child: Text("\$${f.format(realValue)}",
         style: TextStyle(
           fontSize: 40.0,
           color: Colors.blueAccent,
