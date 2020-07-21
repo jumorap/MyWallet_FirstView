@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "125970532260-lkf6hjda11sf48dmnhlv7tp9c18uprfo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.emulateios",
+            "certificate_hash": "f34937fa85115a89d8e33f118acffd9a747b0c0d"
+          }
+        },
+        {
+          "client_id": "125970532260-cueh276sslfh4qsp24h0ntc7v971p9gk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.emulateios",
+            "certificate_hash": "00da79249d58ce95eecc91d67433e5c15ab98edc"
+          }
+        },
+        {
           "client_id": "125970532260-k6c8gpbo3m4b446pp2ce2l2nleudolh5.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -30,6 +46,13 @@
             {
               "client_id": "125970532260-k6c8gpbo3m4b446pp2ce2l2nleudolh5.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "125970532260-mbkl2s3sfh93flqte83pkirdm07a82kf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.emulateios"
+              }
             }
           ]
         }

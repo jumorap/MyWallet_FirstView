@@ -2,6 +2,9 @@ import 'package:emulateios/month_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+
+import '../login_state.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -32,10 +35,14 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _bottomAction(IconData icon){
+  Widget _bottomAction(IconData icon, Function callback){
     return InkWell(
-      child: Icon(icon),
-      onTap: (){},
+      // Next line can build a padding on the down buttons, giving place to be selected
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Icon(icon),
+      ),
+      onTap: callback,
     );
   }
 
@@ -51,12 +58,14 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                _bottomAction(FontAwesomeIcons.history),
-                _bottomAction(FontAwesomeIcons.chartPie),
+                _bottomAction(FontAwesomeIcons.history, (){}),
+                _bottomAction(FontAwesomeIcons.chartPie, (){}),
                 //The dock size is defined by
                 SizedBox(width: 25.0, height: 50.0),
-                _bottomAction(FontAwesomeIcons.wallet),
-                _bottomAction(Icons.settings),
+                _bottomAction(FontAwesomeIcons.wallet, (){}),
+                _bottomAction(Icons.settings, () {
+                  Provider.of<LoginState>(context).logout();
+                }),
               ]
           )
       ),
