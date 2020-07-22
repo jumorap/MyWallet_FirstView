@@ -38,7 +38,12 @@ class CategoryWidget extends StatelessWidget {
             ),
             child: Icon(icon),
           ),
-          Text(name),
+          Text(name,
+          style: TextStyle(
+            fontSize: selected ? 15.0 : 12.0,
+            fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+          ),
+          ),
         ],
       ),
     );

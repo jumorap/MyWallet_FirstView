@@ -24,11 +24,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    _query = Firestore.instance
-        .collection('expenses')
-        .where("month", isEqualTo: currentPage + 1)
-        .snapshots();
-
     _controller = PageController(
       initialPage: currentPage,
       viewportFraction: 0.4,
@@ -49,45 +44,59 @@ class _MyHomePageState extends State<MyHomePage> {
   //Here is the dock found down
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomAppBar(
-        //Next two lines build a notch in the blue button in center of dock
-          notchMargin: 8.0,
-          shape: CircularNotchedRectangle(),
-          child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                _bottomAction(FontAwesomeIcons.history, (){}),
-                _bottomAction(FontAwesomeIcons.chartPie, (){}),
-                //The dock size is defined by
-                SizedBox(width: 25.0, height: 50.0),
-                _bottomAction(FontAwesomeIcons.wallet, (){}),
-                _bottomAction(Icons.settings, () {
-                  Provider.of<LoginState>(context).logout();
-                }),
-              ]
-          )
-      ),
-      //This is blue button that is in center of dock
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
+    return Consumer<LoginState>(
+        builder: (BuildContext context, LoginState state, Widget child) {
+          var user = Provider.of<LoginState>(context).currentUser();
+          // Like in "add_page.dart", we call our database Firebase, and after call the collection of our instance users, after,
+          // we generate from the ID [user.uid] that came from the sync of Google Account another collection
+          // where we gonna save the data added by our users. So, we can separate individually the data for user
+          // and after teach the information to our users
+          _query = Firestore.instance
+              .collection('users')
+              .document(user.uid)
+              .collection('expenses')
+              .where("month", isEqualTo: currentPage + 1)
+              .snapshots();
+      return Scaffold(
+        bottomNavigationBar: BottomAppBar(
+          //Next two lines build a notch in the blue button in center of dock
+            notchMargin: 8.0,
+            shape: CircularNotchedRectangle(),
+            child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _bottomAction(FontAwesomeIcons.history, () {}),
+                  _bottomAction(FontAwesomeIcons.chartPie, () {}),
+                  //The dock size is defined by
+                  SizedBox(width: 25.0, height: 50.0),
+                  _bottomAction(FontAwesomeIcons.wallet, () {}),
+                  _bottomAction(Icons.settings, () {
+                    Provider.of<LoginState>(context).logout();
+                  }),
+                ]
+            )
+        ),
+        //This is blue button that is in center of dock
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
-        //Next lines build one action to open a new page-layout in app. Is like a setOnClickListener in Java
-        onPressed: (){
-          Navigator.of(context).pushNamed('/add');
-        },
-      ),
-      //Here we begin to build the body of app
-      body: _body(),
-    );
+          //Next lines build one action to open a new page-layout in app. Is like a setOnClickListener in Java
+          onPressed: () {
+            Navigator.of(context).pushNamed('/add');
+          },
+        ),
+        //Here we begin to build the body of app
+        body: _body(),
+      );
+    });
   }
 
   Widget _body(){
     //The next line works like safer of top notch
     return SafeArea(
       child: Column(
-        //Define the "objects-widgets that appear in body"
+        //Define the "objects-widgets" that appear in body
           children: <Widget>[
             _selector(),
             StreamBuilder<QuerySnapshot>(
@@ -101,8 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 return Center(//We present a bar load. Circular
                   child: CircularProgressIndicator(),
                 );
-              },
-            ),
+              }),
           ]
       ),
     );
@@ -117,16 +125,11 @@ class _MyHomePageState extends State<MyHomePage> {
       color: Colors.blueGrey,
     );
     final unselected = TextStyle(
-      fontSize: 12.0,
+      fontSize: 13.0,
       fontWeight: FontWeight.normal,
-      color: Colors.blueGrey.withOpacity(0.4),
+      color: Colors.blueGrey.withOpacity(0.5),
     );
-
-    if (position == currentPage) {
-      _alignment = Alignment.center;
-    } else {
-      _alignment = Alignment.center;
-    }
+    _alignment = Alignment.center;
 
     return Align(
         alignment: _alignment,
@@ -141,8 +144,11 @@ class _MyHomePageState extends State<MyHomePage> {
         child: PageView(
             onPageChanged: (newPage) {
               setState(() {
+                var user = Provider.of<LoginState>(context).currentUser();
                 currentPage = newPage;
                 _query = Firestore.instance
+                    .collection('users')
+                    .document(user.uid)
                     .collection('expenses')
                     .where("month", isEqualTo: currentPage + 1)
                     .snapshots();

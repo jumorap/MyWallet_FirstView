@@ -1,56 +1,77 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginState with ChangeNotifier {
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  SharedPreferences _prefs;
 
   bool _loggedIn = false;
+  bool _loading = true;
+  FirebaseUser _user;
+
+  LoginState() {
+    loginState();
+  }
+
   bool isLoggedIn() => _loggedIn;
+  bool isLoading() => _loading;
+  FirebaseUser currentUser() => _user;
 
-  void login() async{
-    var user = await _handleSignIn();
+  void login() async {
+    _loading = true;
+    notifyListeners();
 
-    if (user != null) {
+    _user = await _handleSignIn();
+
+    _loading = false;
+    if (_user != null) {
+      _prefs.setBool("isLoggedIn", true);
       _loggedIn = true;
+      notifyListeners();
     } else {
       _loggedIn = false;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   void logout() {
+    _prefs.clear();
+    _googleSignIn.signOut();
     _loggedIn = false;
     notifyListeners();
   }
 
+  // This code come from pub.dev, searching google_sign_in. Help us to sync data account
+  // with this app, generating an id to search in data base
   Future<FirebaseUser> _handleSignIn() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
     );
 
-    final FirebaseUser user = (await _auth.signInWithCredential(credential)) as FirebaseUser;
-    print("signed in" + user.displayName);
+    final FirebaseUser user = await _auth.signInWithCredential(credential);
+    print("signed in " + user.displayName);
     return user;
   }
-/*
-  Future<FirebaseUser> _handleSignIn() async {
-    try {
-      await _googleSignIn.signIn();
-    } catch (error) {
-      print(error);
+
+  // Next we can do that the app "remember" or have persistence of the last user that
+  // ingress to our app, so, the user haven't that use select the Google Account that require
+  void loginState() async {
+    _prefs = await SharedPreferences.getInstance();
+    if (_prefs.containsKey("isLoggedIn")) {
+      _user = await _auth.currentUser();
+      _loggedIn = _user != null;
+      _loading = false;
+      notifyListeners();
+    } else {
+      _loading = false;
+      notifyListeners();
     }
   }
-  */
 }

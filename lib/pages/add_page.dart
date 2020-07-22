@@ -1,6 +1,8 @@
+import 'package:emulateios/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import '../category_selection_widget.dart';
 import 'package:flutter/src/widgets/heroes.dart';
 import 'package:intl/intl.dart';
@@ -176,7 +178,7 @@ class _AddPageState extends State<AddPage> {
 
   Widget _submit() {
     return Builder(builder: (BuildContext context) {
-      return Hero(//Here continued the animation from home page > FloatingActionButton
+      return Hero(//Here continued the animation from home_page.dart > FloatingActionButton
         tag: "add_button",
         child: Container(
           height: 65.0,
@@ -191,11 +193,17 @@ class _AddPageState extends State<AddPage> {
               ),
             ),
             onPressed: () {
+              var user = Provider.of<LoginState>(context).currentUser();
               if (value > 0 && category != "") {
+                // We call our database Firebase, and after call the collection of our instance users, after,
+                // we generate from the ID [user.uid] that came from the sync of Google Account another collection
+                // where we gonna save the data added by our users. So, we can separate individually the data for user
                 Firestore.instance
+                    .collection('users')
+                    .document(user.uid)
                     .collection('expenses')
-                .document()
-                .setData({
+                    .document()
+                    .setData({
                   "category": category,
                   "value": value,
                   "month": DateTime.now().month,

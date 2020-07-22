@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
               return LoginPage();
             }
           },
-      '/add': (BuildContext context) => AddPage(),
+        '/add': (BuildContext context) => AddPage(),
         },
       ),
     );
