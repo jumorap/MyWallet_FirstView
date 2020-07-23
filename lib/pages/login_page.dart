@@ -18,7 +18,11 @@ class LoginPage extends StatelessWidget {
             ),
             Text(
               "Mis gastos",
-              style: Theme.of(context).textTheme.display1,
+              style: TextStyle(
+                fontSize: 38.0,
+                color: Colors.blueAccent,
+                fontWeight: FontWeight.w400,
+              )
             ),
             Padding(
               padding: const EdgeInsets.all(4.0),
@@ -44,17 +48,20 @@ class LoginPage extends StatelessWidget {
               // This class of button have a transparent background color
               // and when be selected have gray color. Twin with border
               child: OutlineButton.icon(
-                icon: Icon(FontAwesomeIcons.google),
+                icon: Icon(
+                  FontAwesomeIcons.google,
+                  size: 20.0,
+                ),
                 label: Text(
                   "Ingresar con Google",
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    fontSize: 18.0,
+                    fontSize: 17.0,
                   ),
                 ),
-                onPressed: () {
-                  Provider.of<LoginState>(context).login();
-                },
+                onPressed: () => Provider.of<LoginState>(context).login(),
+                shape: StadiumBorder(),
+                highlightColor: Colors.blueAccent[100],
               ),
             ),
             Expanded(
