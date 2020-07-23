@@ -1,5 +1,6 @@
 import 'package:emulateios/login_state.dart';
 import 'package:emulateios/pages/add_page.dart';
+import 'package:emulateios/pages/detail_page.dart';
 import 'package:emulateios/pages/home_page.dart';
 import 'package:emulateios/pages/login_page.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,22 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           //visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+
+        // With 'onGenerateRoute' we can build a "temporal" page. Where
+        // we gonna teach to our users the details of specific expenses
+        onGenerateRoute: (settings) {
+          if (settings.name == '/details') {
+            DetailsParams params = settings.arguments;
+            return MaterialPageRoute(
+              builder: (BuildContext context) {
+                return DetailsPage(
+                  params: params,
+                );
+              }
+            );
+          }
+        },
+
         routes: { //Declare the routes-pages-layouts to surf about the app
           '/': (BuildContext context) {
             //To define the Layout that appear to our users, depending if they are logged or not

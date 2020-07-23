@@ -19,6 +19,7 @@ class _MyHomePageState extends State<MyHomePage> {
   PageController _controller;
   int currentPage = DateTime.now().month - 1;
   Stream<QuerySnapshot> _query;
+  GraphType currentType = GraphType.LINES;
 
   @override
   void initState() {
@@ -66,12 +67,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  _bottomAction(FontAwesomeIcons.history, () {}),
-                  _bottomAction(FontAwesomeIcons.chartPie, () {}),
+                  _bottomAction(FontAwesomeIcons.chartLine, () {
+                    setState(() {
+                      currentType = GraphType.LINES;
+                    });
+                  }),
+                  _bottomAction(FontAwesomeIcons.chartPie, () {
+                    setState(() {
+                      currentType = GraphType.PIE;
+                    });
+                  }),
                   //The dock size is defined by
                   SizedBox(width: 25.0, height: 50.0),
                   _bottomAction(FontAwesomeIcons.wallet, () {}),
-                  _bottomAction(Icons.settings, () {
+                  _bottomAction(FontAwesomeIcons.signOutAlt, () {
                     Provider.of<LoginState>(context).logout();
                   }),
                 ]
@@ -105,6 +114,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (data.hasData) {
                   return MonthWidget(
                     documents: data.data.documents,
+                    graphType: currentType,
+                    month: currentPage,
                   );
                 }
                 return Center(//We present a bar load. Circular

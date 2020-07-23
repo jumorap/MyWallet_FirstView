@@ -1,16 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emulateios/pages/detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'greph_widget.dart';
 import 'package:intl/intl.dart';
+
+enum GraphType {
+  LINES,
+  PIE,
+}
 
 class MonthWidget extends StatefulWidget {
   final List<DocumentSnapshot> documents;
   final double total;
   final List<double> perDay;
   final Map<String, double> categories;
+  final GraphType graphType;
+  final int month;
 
-  MonthWidget({Key key, this.documents}) : 
+  MonthWidget({Key key, @required this.graphType, this.documents, this.month}) :
       total = documents.map((doc) => doc['value'])
           .fold(0.0, (a, b) => a + b),
       perDay = List.generate(31, (int index){
@@ -50,7 +58,7 @@ class _MonthWidgetState extends State<MonthWidget> {
     );
   }
   Widget _expenses() {
-    //Imported 'package:intl/intl.dart', we can give format to [widget.total], doing friendly how this look to our users
+    // Imported 'package:intl/intl.dart', we can give format to [widget.total], doing friendly how this look to our users
     // is used wrote the next line, and after taking the variable [widget.total] so: f.format([variable])
     NumberFormat f = new NumberFormat("#,###", "es_COP");
     return Column(
@@ -73,20 +81,40 @@ class _MonthWidgetState extends State<MonthWidget> {
   }
 
   Widget _graph() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Container(
-        height: 180.5,
-        child: GraphWidget(
+    if (widget.graphType == GraphType.LINES) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Container(
+          height: 180.5,
+          child: LinesGraphWidget(
             data: widget.perDay,
+          ),
         ),
-      ),
-    ); // Container
+      ); // Container
+    } else {
+      var perCategory = widget.categories.keys.map((name) => widget.categories[name] / widget.total).toList();
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Container(
+          height: 180.5,
+          child: PieGraphWidget(
+            data: perCategory,
+          ),
+        ),
+      ); // Container
+    }
   }
 
   Widget _item(IconData icon, String name, double percent, int value){
     NumberFormat f = new NumberFormat("#,###", "es_COP");
     return ListTile(
+      // We gonna do selectable the list of items where appear the expenses.
+      // In this case, we know that ListTile is prepared to use onTap directly,
+      // them, we don't use GestureListener to do selectable an item
+      onTap: () {
+        Navigator.of(context).pushNamed('/details', arguments: DetailsParams(name, widget.month));
+      },
       leading: Icon(icon, size: 26.0),
       title: Text(name,
         style: TextStyle(
