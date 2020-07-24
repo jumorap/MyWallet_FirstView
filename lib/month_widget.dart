@@ -155,7 +155,20 @@ class _MonthWidgetState extends State<MonthWidget> {
         itemBuilder: (BuildContext context, int index) {
           var key = widget.categories.keys.elementAt(index);
           var data = widget.categories[key];
-          return _item(FontAwesomeIcons.shoppingCart, key, 100 * data / widget.total , data ~/ 1);
+          String keyStr = key.toString();
+          IconData iconSend;
+          if (keyStr == "Compras") iconSend = FontAwesomeIcons.shoppingCart;
+          else if (keyStr == "Diversión") iconSend = FontAwesomeIcons.beer;
+          else if (keyStr == "Alimentos") iconSend = FontAwesomeIcons.hamburger;
+          else if (keyStr == "Servicios") iconSend = FontAwesomeIcons.wallet;
+          else if (keyStr == "Tarjetas") iconSend = FontAwesomeIcons.creditCard;
+          else if (keyStr == "Salud") iconSend = FontAwesomeIcons.heartbeat;
+          else if (keyStr == "Transporte") iconSend = FontAwesomeIcons.busAlt;
+          else if (keyStr == "Educación") iconSend = FontAwesomeIcons.university;
+          else if (keyStr == "Impuestos") iconSend = FontAwesomeIcons.listAlt;
+          else if (keyStr == "Imprevisto") iconSend = FontAwesomeIcons.frown;
+
+          return _item(iconSend, key, 100 * data / widget.total , data ~/ 1);
         },
         separatorBuilder: (BuildContext context, int index) {
           return Container(
