@@ -208,6 +208,7 @@ class _AddPageState extends State<AddPage> {
                   "value": value,
                   "month": DateTime.now().month,
                   "day": DateTime.now().day,
+                  "year": DateTime.now().year,
                 });
                 Navigator.of(context).pop();
               } else {

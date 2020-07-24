@@ -1,8 +1,11 @@
 import 'package:emulateios/month_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get_it/get_it.dart';
 
 import '../login_state.dart';
 
@@ -15,6 +18,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   PageController _controller;
   int currentPage = DateTime.now().month - 1;
@@ -29,6 +33,8 @@ class _MyHomePageState extends State<MyHomePage> {
       initialPage: currentPage,
       viewportFraction: 0.4,
     );
+
+    //setupNotificationPlugin();
   }
 
   Widget _bottomAction(IconData icon, Function callback){
@@ -59,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
               .where("month", isEqualTo: currentPage + 1)
               .snapshots();
       return Scaffold(
+        backgroundColor: Colors.white,
         bottomNavigationBar: BottomAppBar(
           //Next two lines build a notch in the blue button in center of dock
             notchMargin: 8.0,
@@ -111,15 +118,38 @@ class _MyHomePageState extends State<MyHomePage> {
             StreamBuilder<QuerySnapshot>(
               stream: _query,
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> data){
-                if (data.hasData) {
-                  return MonthWidget(
-                    documents: data.data.documents,
-                    graphType: currentType,
-                    month: currentPage,
-                  );
+                // We confirm if there is data to teach to our users, because if there is not,
+                // we gonna teach a windows with an image that represent an empty
+                if (data.connectionState == ConnectionState.active) {
+                  if (data.data.documents.length > 0) {
+                    return MonthWidget(
+                      documents: data.data.documents,
+                      graphType: currentType,
+                      month: currentPage,
+                    );
+                  } else {
+                    return Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset('assets/empty_cart.png'),
+                          SizedBox(height: 80,),
+                          Text(
+                            "¡Añade tus gastos para empezar!",
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .caption,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                 }
-                return Center(//We present a bar load. Circular
-                  child: CircularProgressIndicator(),
+                return Expanded(
+                  child: Center(//We present a bar load. Circular
+                    child: CircularProgressIndicator(),
+                  ),
                 );
               }),
           ]
@@ -184,5 +214,44 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  // With next lines we can send notifications to our user in specific time.
+  // In this case was used the pluggin 'flutter_local_notifications 1.4.4+2'
+  // visible in pubspec.yaml, from pub.dev. But continue in experimental process
 
+  /*void setupNotificationPlugin() {
+    LocalNotifications localNotifications = GetIt.I();
+
+    localNotifications.init(
+      onSelectNotification: onSelectNotification,
+      onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+    );
+  }
+
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+    }
+    await Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) => MyHomePage()),
+    );
+  }
+
+  Future onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) async {
+    // display a dialog with the notification details, tap ok to go to another page
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: Text("Don't forget to add your expenses"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ));
+  }*/
 }

@@ -46,7 +46,7 @@ class LoginPage extends StatelessWidget {
               // where we use 'Text' like label.
               //
               // This class of button have a transparent background color
-              // and when be selected have gray color. Twin with border
+              // and when be selected have gray color. Twice with border
               child: OutlineButton.icon(
                 icon: Icon(
                   FontAwesomeIcons.google,
@@ -70,13 +70,13 @@ class LoginPage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(32.0),
+              // We can make clickable text with RichText
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   style: Theme.of(context).textTheme.bodyText1,
                   text: "Al ingresar, está aceptando nuestros ",
                   children: [
-                    // We can make clickable text
                     TextSpan(
                       text: "Términos, Condiciones",
                       //recognizer: _recognizer1,
@@ -85,7 +85,7 @@ class LoginPage extends StatelessWidget {
                         .bodyText1
                         .copyWith(fontWeight: FontWeight.bold),
                     ),
-                    TextSpan(text: " y  "),
+                    TextSpan(text: " y "),
                     TextSpan(
                       text: "Políticas de Privacidad",
                       //recognizer: _recognizer2,
