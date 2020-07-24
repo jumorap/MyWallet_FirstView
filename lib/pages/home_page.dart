@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get_it/get_it.dart';
 
 import '../login_state.dart';
 
@@ -34,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
       viewportFraction: 0.4,
     );
 
-    //setupNotificationPlugin();
+    setupNotificationPlugin();
   }
 
   Widget _bottomAction(IconData icon, Function callback){
@@ -218,22 +217,25 @@ class _MyHomePageState extends State<MyHomePage> {
   // In this case was used the pluggin 'flutter_local_notifications 1.4.4+2'
   // visible in pubspec.yaml, from pub.dev. But continue in experimental process
 
-  /*void setupNotificationPlugin() {
-    LocalNotifications localNotifications = GetIt.I();
-
-    localNotifications.init(
-      onSelectNotification: onSelectNotification,
-      onDidReceiveLocalNotification: onDidReceiveLocalNotification,
-    );
+  Future<void> setupNotificationPlugin() {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+// initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    var initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    var initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onSelectNotification: selectNotification
+    ).then((init) => setupNotification());
   }
 
-  Future onSelectNotification(String payload) async {
+  Future selectNotification(String payload) async {
     if (payload != null) {
       debugPrint('notification payload: ' + payload);
     }
     await Navigator.push(
       context,
-      new MaterialPageRoute(builder: (context) => MyHomePage()),
+      MaterialPageRoute(builder: (context) => MyHomePage()),
     );
   }
 
@@ -243,7 +245,7 @@ class _MyHomePageState extends State<MyHomePage> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          content: Text("Don't forget to add your expenses"),
+          content: Text("Recuerda actualizar tus gastos hoy"),
           actions: <Widget>[
             FlatButton(
               child: Text('Ok'),
@@ -253,5 +255,24 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ));
-  }*/
+  }
+
+  void setupNotification() async {
+    var time = Time(20, 25, 0);
+    var androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+        'daily-notifications',
+        'Daily Notifications',
+        'Daily Notifications');
+    var iOSPlatformChannelSpecifics =
+    IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.showDailyAtTime(
+        0,
+        'Mis Gastos',
+        'Recuerda actualizar tus gastos hoy',
+        time,
+        platformChannelSpecifics);
+  }
 }

@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       //create: (BuildContext context) async => LoginState(),
       //lazy: false,
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Mis Gastos',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           //visualDensity: VisualDensity.adaptivePlatformDensity,
